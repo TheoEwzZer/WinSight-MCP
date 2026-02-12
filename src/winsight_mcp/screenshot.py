@@ -70,28 +70,31 @@ def capture_window_hwnd(hwnd: int) -> bytes:
     bitmap.CreateCompatibleBitmap(mfc_dc, width, height)
     save_dc.SelectObject(bitmap)
 
-    # Use PrintWindow to render the window content into our bitmap
-    ctypes.windll.user32.PrintWindow(hwnd, save_dc.GetSafeHdc(), PW_RENDERFULLCONTENT)
+    try:
+        # Use PrintWindow to render the window content into our bitmap
+        ctypes.windll.user32.PrintWindow(
+            hwnd, save_dc.GetSafeHdc(), PW_RENDERFULLCONTENT
+        )
 
-    # Convert to PIL Image
-    bmp_info: BitmapInfo = cast(BitmapInfo, bitmap.GetInfo())  # pyright: ignore[reportUnknownMemberType]
-    bmp_bits: bytes = bitmap.GetBitmapBits(True)
-    pil_img: PILImage.Image = PILImage.frombuffer(
-        "RGB",
-        (bmp_info["bmWidth"], bmp_info["bmHeight"]),
-        bmp_bits,
-        "raw",
-        "BGRX",
-        0,
-        1,
-    )
+        # Convert to PIL Image
+        bmp_info: BitmapInfo = cast(BitmapInfo, bitmap.GetInfo())  # pyright: ignore[reportUnknownMemberType]
+        bmp_bits: bytes = bitmap.GetBitmapBits(True)
+        pil_img: PILImage.Image = PILImage.frombuffer(
+            "RGB",
+            (bmp_info["bmWidth"], bmp_info["bmHeight"]),
+            bmp_bits,
+            "raw",
+            "BGRX",
+            0,
+            1,
+        )
 
-    # Cleanup Win32 resources
-    win32gui.DeleteObject(bitmap.GetHandle())
-    save_dc.DeleteDC()
-    mfc_dc.DeleteDC()
-    win32gui.ReleaseDC(hwnd, hwnd_dc)
-
-    buffer: io.BytesIO = io.BytesIO()
-    pil_img.save(buffer, format="PNG")
-    return buffer.getvalue()
+        buffer: io.BytesIO = io.BytesIO()
+        pil_img.save(buffer, format="PNG")
+        return buffer.getvalue()
+    finally:
+        # Cleanup Win32 resources even if conversion fails
+        win32gui.DeleteObject(bitmap.GetHandle())
+        save_dc.DeleteDC()
+        mfc_dc.DeleteDC()
+        win32gui.ReleaseDC(hwnd, hwnd_dc)
