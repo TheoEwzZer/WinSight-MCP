@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import subprocess
-import sys
 import time
 
 from .types import ProcessResult, WindowInfo, WindowRect
@@ -40,47 +39,6 @@ def open_application(
             result["window_warning"] = (
                 f"Window matching '{wait_for_window}' not found within {timeout}s"
             )
-
-    return result
-
-
-def run_python_script(
-    script_path: str,
-    wait_for_window: str | None = None,
-    capture_after: float = 2.0,
-    timeout: int = 30,
-) -> ProcessResult:
-    """Run a Python script, capture console output and optionally wait for a window."""
-    try:
-        proc: subprocess.Popen[bytes] = subprocess.Popen(
-            [sys.executable, script_path],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
-        )
-    except Exception as e:
-        return {"error": f"Failed to run script: {e}"}
-
-    result: ProcessResult = {"pid": proc.pid, "script": script_path}
-
-    if wait_for_window:
-        window: WindowInfo | None = _wait_for_window(wait_for_window, timeout=timeout)
-        if window:
-            time.sleep(capture_after)
-            window = find_window(wait_for_window) or window
-            result["window"] = _window_rect(window)
-        else:
-            result["window_warning"] = (
-                f"Window matching '{wait_for_window}' not found within {timeout}s"
-            )
-
-    try:
-        stdout_bytes, stderr_bytes = proc.communicate(timeout=3)
-        result["stdout"] = stdout_bytes.decode("utf-8", errors="replace")
-        result["stderr"] = stderr_bytes.decode("utf-8", errors="replace")
-        result["returncode"] = proc.returncode
-    except subprocess.TimeoutExpired:
-        result["note"] = "Process still running (GUI app likely)"
 
     return result
 

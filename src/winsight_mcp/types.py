@@ -60,15 +60,10 @@ class BitmapInfo(TypedDict):
 
 
 class ProcessResult(TypedDict, total=False):
-    """Result from open_application or run_python_script."""
+    """Result from open_application."""
 
     pid: int
     command: str
-    script: str
     window: WindowRect
     window_warning: str
-    stdout: str
-    stderr: str
-    returncode: int
-    note: str
     error: str

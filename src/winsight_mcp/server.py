@@ -3,24 +3,18 @@
 from __future__ import annotations
 
 import json
-from typing import Any
 
 from mcp.server.fastmcp import FastMCP, Image
 
-from winsight_mcp.types import PublicWindowInfo
-
 from .screenshot import capture_full_screen, capture_region, capture_window_hwnd
-from .types import ProcessResult, WindowInfo, WindowListEntry
+from .types import ProcessResult, PublicWindowInfo, WindowInfo, WindowListEntry
 from .window_manager import (
     find_window as _find_window,
     list_windows as _list_windows,
     get_window_info as _get_window_info,
     focus_window as _focus_window,
 )
-from .process_manager import (
-    open_application as _open_application,
-    run_python_script as _run_python_script,
-)
+from .process_manager import open_application as _open_application
 
 mcp: FastMCP = FastMCP("WinSight", instructions="Windows Screen Capture MCP Server")
 
@@ -123,35 +117,6 @@ def open_application(
     """
     result: ProcessResult = _open_application(command, args, wait_for_window, timeout)
     return json.dumps(result, indent=2)
-
-
-@mcp.tool()
-def run_python_script(
-    script_path: str,
-    wait_for_window: str | None = None,
-    capture_after: float = 2.0,
-) -> list[Any]:
-    """Run a Python script and capture the result (console output + optional screenshot).
-
-    Args:
-        script_path: Path to the Python script to execute
-        wait_for_window: Optional window title to wait for (for GUI scripts)
-        capture_after: Seconds to wait before capturing the window (default: 2.0)
-    """
-    result: ProcessResult = _run_python_script(
-        script_path, wait_for_window, capture_after
-    )
-    response: list[str | Image] = [json.dumps(result, indent=2)]
-
-    # If a window was found, capture it using PrintWindow (works even if behind other windows)
-    if "window" in result and "hwnd" in result["window"]:
-        try:
-            data: bytes = capture_window_hwnd(result["window"]["hwnd"])
-            response.append(Image(data=data, format="png"))
-        except Exception:
-            pass
-
-    return response
 
 
 @mcp.tool()
