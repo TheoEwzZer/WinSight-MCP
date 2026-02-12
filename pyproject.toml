@@ -1,0 +1,49 @@
+[project]
+name = "winsight-mcp"
+version = "0.1.0"
+description = "Windows Screen Capture MCP Server — give Claude Code eyes on your Windows desktop"
+requires-python = ">=3.10"
+readme = "README.md"
+license = "MIT"
+authors = [{ name = "Théo Fabiano", email = "theo.fabiano@epitech.eu" }]
+keywords = [
+    "mcp",
+    "windows",
+    "screen-capture",
+    "screenshot",
+    "claude",
+    "claude-code",
+    "model-context-protocol",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Microsoft :: Windows",
+    "Topic :: Desktop Environment",
+    "Topic :: Multimedia :: Graphics :: Capture :: Screen Capture",
+]
+dependencies = [
+    "mcp[cli]>=1.0.0",
+    "Pillow>=10.0.0",
+    "mss>=9.0.0",
+    "pygetwindow>=0.0.9",
+    "pyautogui>=0.9.54",
+    "pywin32>=306",
+]
+
+[project.urls]
+Homepage = "https://github.com/TheoEwzZer/WinSight-MCP"
+Repository = "https://github.com/TheoEwzZer/WinSight-MCP"
+Issues = "https://github.com/TheoEwzZer/WinSight-MCP/issues"
+
+[project.scripts]
+winsight-mcp = "winsight_mcp.server:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

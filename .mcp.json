@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "winsight": {
+      "command": "uv",
+      "args": ["--directory", "D:/repositories/WinSight-MCP", "run", "python", "-m", "winsight_mcp"]
+    }
+  }
+}
