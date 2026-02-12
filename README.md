@@ -1,5 +1,7 @@
 # WinSight MCP
 
+mcp-name: io.github.TheoEwzZer/winsight
+
 Windows Screen Capture MCP Server — give Claude Code eyes on your Windows desktop.
 
 WinSight is an [MCP](https://modelcontextprotocol.io) server that lets Claude Code capture your screen, manage windows, and launch applications on Windows.

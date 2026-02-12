@@ -4,3 +4,5 @@ __pycache__/
 dist/
 *.egg-info/
 test_winsight_*.py
+mcp-publisher.exe
+.mcpregistry_*
