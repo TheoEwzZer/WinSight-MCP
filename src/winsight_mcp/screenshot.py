@@ -12,7 +12,7 @@ import win32ui
 from PIL import Image as PILImage
 from PIL import ImageGrab
 
-from .types import BitmapInfo
+from .types import BitmapInfo, MonitorInfo
 
 if TYPE_CHECKING:
     from _win32typing import PyCBitmap, PyCDC
@@ -20,6 +20,28 @@ if TYPE_CHECKING:
 
 # PrintWindow flag: capture full DWM-rendered content (Windows 8.1+)
 PW_RENDERFULLCONTENT: int = 2
+
+
+def list_monitors() -> list[MonitorInfo]:
+    """List all available monitors using mss.
+
+    Monitor index 0 in mss represents all monitors combined and is skipped.
+    Real monitors start at index 1, with index 1 considered primary.
+    """
+    with mss.mss() as sct:
+        monitors: list[dict[str, int]] = sct.monitors
+        return [
+            MonitorInfo(
+                index=i,
+                width=mon["width"],
+                height=mon["height"],
+                x=mon["left"],
+                y=mon["top"],
+                is_primary=(i == 1),
+            )
+            for i, mon in enumerate(monitors)
+            if i >= 1
+        ]
 
 
 def capture_full_screen(monitor: int = 1) -> bytes:

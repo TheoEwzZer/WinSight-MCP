@@ -136,6 +136,104 @@ def _force_foreground(hwnd: int) -> None:
             )
 
 
+def resize_window(window_title: str, width: int, height: int) -> str:
+    """Resize a window to the given dimensions, keeping its current position."""
+    w: WindowInfo | None = find_window(window_title)
+    if w is None:
+        return f"No window found matching '{window_title}'"
+
+    hwnd: int = w["hwnd"]
+    try:
+        win32gui.SetWindowPos(
+            hwnd,
+            win32con.HWND_TOP,
+            0,
+            0,
+            width,
+            height,
+            win32con.SWP_NOMOVE | win32con.SWP_NOZORDER,
+        )
+        return f"Window '{w['title']}' resized to {width}x{height}"
+    except Exception as e:
+        return f"Failed to resize window '{w['title']}': {e}"
+
+
+def move_window(window_title: str, x: int, y: int) -> str:
+    """Move a window to the given position, keeping its current size."""
+    w: WindowInfo | None = find_window(window_title)
+    if w is None:
+        return f"No window found matching '{window_title}'"
+
+    hwnd: int = w["hwnd"]
+    try:
+        win32gui.SetWindowPos(
+            hwnd,
+            win32con.HWND_TOP,
+            x,
+            y,
+            0,
+            0,
+            win32con.SWP_NOSIZE | win32con.SWP_NOZORDER,
+        )
+        return f"Window '{w['title']}' moved to ({x}, {y})"
+    except Exception as e:
+        return f"Failed to move window '{w['title']}': {e}"
+
+
+def minimize_window(window_title: str) -> str:
+    """Minimize a window."""
+    w: WindowInfo | None = find_window(window_title)
+    if w is None:
+        return f"No window found matching '{window_title}'"
+
+    try:
+        win32gui.ShowWindow(w["hwnd"], win32con.SW_MINIMIZE)
+        return f"Window '{w['title']}' minimized"
+    except Exception as e:
+        return f"Failed to minimize window '{w['title']}': {e}"
+
+
+def maximize_window(window_title: str) -> str:
+    """Maximize a window."""
+    w: WindowInfo | None = find_window(window_title)
+    if w is None:
+        return f"No window found matching '{window_title}'"
+
+    try:
+        win32gui.ShowWindow(w["hwnd"], win32con.SW_MAXIMIZE)
+        return f"Window '{w['title']}' maximized"
+    except Exception as e:
+        return f"Failed to maximize window '{w['title']}': {e}"
+
+
+def restore_window(window_title: str) -> str:
+    """Restore a minimized or maximized window to its normal state."""
+    w: WindowInfo | None = find_window(window_title)
+    if w is None:
+        return f"No window found matching '{window_title}'"
+
+    try:
+        win32gui.ShowWindow(w["hwnd"], win32con.SW_RESTORE)
+        return f"Window '{w['title']}' restored"
+    except Exception as e:
+        return f"Failed to restore window '{w['title']}': {e}"
+
+
+def wait_for_window(window_title: str, timeout: int = 30) -> str:
+    """Wait for a window matching the title to appear.
+
+    Uses adaptive polling: 0.2s intervals for the first 5 seconds, then 0.5s.
+    """
+    start: float = time.time()
+    while time.time() - start < timeout:
+        w: WindowInfo | None = find_window(window_title)
+        if w is not None:
+            return f"Window found: '{w['title']}'"
+        elapsed: float = time.time() - start
+        time.sleep(0.2 if elapsed < 5 else 0.5)
+    return f"Timed out waiting for window matching '{window_title}' after {timeout}s"
+
+
 def get_window_rect(title: str) -> tuple[int, int, int, int] | None:
     """Get (left, top, width, height) of a window matching the title."""
     w: WindowInfo | None = find_window(title)

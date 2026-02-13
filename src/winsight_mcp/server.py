@@ -6,13 +6,24 @@ import json
 
 from mcp.server.fastmcp import FastMCP, Image
 
-from .screenshot import capture_full_screen, capture_region, capture_window_hwnd
+from .screenshot import (
+    capture_full_screen,
+    capture_region,
+    capture_window_hwnd,
+    list_monitors as _list_monitors,
+)
 from .types import ProcessResult, PublicWindowInfo, WindowInfo, WindowListEntry
 from .window_manager import (
     find_window as _find_window,
-    list_windows as _list_windows,
-    get_window_info as _get_window_info,
     focus_window as _focus_window,
+    get_window_info as _get_window_info,
+    list_windows as _list_windows,
+    maximize_window as _maximize_window,
+    minimize_window as _minimize_window,
+    move_window as _move_window,
+    resize_window as _resize_window,
+    restore_window as _restore_window,
+    wait_for_window as _wait_for_window,
 )
 from .process_manager import open_application as _open_application
 
@@ -130,6 +141,87 @@ def get_window_info(window_title: str) -> str:
     if info is None:
         return f"No window found matching '{window_title}'"
     return json.dumps(info, indent=2)
+
+
+@mcp.tool()
+def list_monitors() -> str:
+    """List all available monitors with their resolution and position.
+
+    Returns monitor index, dimensions, position, and whether it is the primary monitor.
+    Use the monitor index with take_screenshot to capture a specific monitor.
+    """
+    monitors = _list_monitors()
+    if not monitors:
+        return "No monitors found"
+    return json.dumps(monitors, indent=2)
+
+
+@mcp.tool()
+def resize_window(window_title: str, width: int, height: int) -> str:
+    """Resize a window to the specified dimensions, keeping its current position.
+
+    Args:
+        window_title: Partial title of the window to resize
+        width: New width in pixels
+        height: New height in pixels
+    """
+    return _resize_window(window_title, width, height)
+
+
+@mcp.tool()
+def move_window(window_title: str, x: int, y: int) -> str:
+    """Move a window to the specified position, keeping its current size.
+
+    Args:
+        window_title: Partial title of the window to move
+        x: New left coordinate in pixels
+        y: New top coordinate in pixels
+    """
+    return _move_window(window_title, x, y)
+
+
+@mcp.tool()
+def minimize_window(window_title: str) -> str:
+    """Minimize a window to the taskbar.
+
+    Args:
+        window_title: Partial title of the window to minimize
+    """
+    return _minimize_window(window_title)
+
+
+@mcp.tool()
+def maximize_window(window_title: str) -> str:
+    """Maximize a window to fill the screen.
+
+    Args:
+        window_title: Partial title of the window to maximize
+    """
+    return _maximize_window(window_title)
+
+
+@mcp.tool()
+def restore_window(window_title: str) -> str:
+    """Restore a minimized or maximized window to its normal state.
+
+    Args:
+        window_title: Partial title of the window to restore
+    """
+    return _restore_window(window_title)
+
+
+@mcp.tool()
+def wait_for_window(window_title: str, timeout: int = 30) -> str:
+    """Wait for a window matching the title to appear.
+
+    Uses adaptive polling: 0.2s intervals for the first 5 seconds, then 0.5s.
+    Useful after launching an application via Bash to wait for its UI to be ready.
+
+    Args:
+        window_title: Partial title of the window to wait for
+        timeout: Maximum seconds to wait (default: 30)
+    """
+    return _wait_for_window(window_title, timeout)
 
 
 def main() -> None:

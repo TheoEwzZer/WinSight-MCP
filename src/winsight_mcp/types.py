@@ -59,6 +59,17 @@ class BitmapInfo(TypedDict):
     bmBitsPixel: int
 
 
+class MonitorInfo(TypedDict):
+    """Monitor information returned by list_monitors."""
+
+    index: int
+    width: int
+    height: int
+    x: int
+    y: int
+    is_primary: bool
+
+
 class ProcessResult(TypedDict, total=False):
     """Result from open_application."""
 
