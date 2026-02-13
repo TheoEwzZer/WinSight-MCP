@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/TheoEwzZer/WinSight-MCP/compare/winsight-mcp-v0.2.0...winsight-mcp-v0.2.1) (2026-02-13)
+
+
+### Bug Fixes
+
+* **ci:** use release/v1 branch for pypi-publish action ([63ee1ed](https://github.com/TheoEwzZer/WinSight-MCP/commit/63ee1edb31d24b2822e96e044387da50776b152b))
+
 ## [0.2.0](https://github.com/TheoEwzZer/WinSight-MCP/compare/winsight-mcp-v0.1.3...winsight-mcp-v0.2.0) (2026-02-13)
 
 
