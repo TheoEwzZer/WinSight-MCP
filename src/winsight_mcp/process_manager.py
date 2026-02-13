@@ -32,7 +32,7 @@ def open_application(
     result: ProcessResult = {"pid": proc.pid, "command": command}
 
     if wait_for_window:
-        window: WindowInfo | None = _wait_for_window(wait_for_window, timeout)
+        window: WindowInfo | None = poll_for_window(wait_for_window, timeout)
         if window:
             result["window"] = _window_rect(window)
         else:
@@ -55,7 +55,7 @@ def _window_rect(w: WindowInfo) -> WindowRect:
     }
 
 
-def _wait_for_window(title: str, timeout: int = 10) -> WindowInfo | None:
+def poll_for_window(title: str, timeout: int = 10) -> WindowInfo | None:
     """Poll for a window matching the title to appear."""
     start: float = time.time()
     while time.time() - start < timeout:

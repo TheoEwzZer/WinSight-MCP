@@ -11,7 +11,7 @@ import win32gui
 from .types import PublicWindowInfo, WindowInfo, WindowListEntry
 
 
-def _is_candidate(hwnd: int, filter_lower: str | None = None) -> str | None:
+def is_candidate(hwnd: int, filter_lower: str | None = None) -> str | None:
     """Return the window title if hwnd is a visible window matching the filter, else None."""
     if not win32gui.IsWindowVisible(hwnd):
         return None
@@ -22,7 +22,7 @@ def _is_candidate(hwnd: int, filter_lower: str | None = None) -> str | None:
     return title if is_match else None
 
 
-def _build_window_info(hwnd: int, title: str) -> WindowInfo:
+def build_window_info(hwnd: int, title: str) -> WindowInfo:
     """Build a WindowInfo dict from an hwnd and its title."""
     left, top, right, bottom = win32gui.GetWindowRect(hwnd)
     show_cmd: int = win32gui.GetWindowPlacement(hwnd)[1]
@@ -45,9 +45,9 @@ def list_windows(filter_text: str | None = None) -> list[WindowListEntry]:
 
     def enum_callback(hwnd: int, ctx: list[WindowListEntry]) -> bool:
         """Collect visible window info into ctx for each enumerated hwnd."""
-        title: str | None = _is_candidate(hwnd, filter_lower)
+        title: str | None = is_candidate(hwnd, filter_lower)
         if title is not None:
-            info: WindowInfo = _build_window_info(hwnd, title)
+            info: WindowInfo = build_window_info(hwnd, title)
             ctx.append({**info, "active": hwnd == win32gui.GetForegroundWindow()})
         return True
 
@@ -63,9 +63,9 @@ def find_window(title: str) -> WindowInfo | None:
         """Find the first matching window and stop enumeration."""
         if ctx:
             return False
-        wnd_title: str | None = _is_candidate(hwnd, title.lower())
+        wnd_title: str | None = is_candidate(hwnd, title.lower())
         if wnd_title is not None:
-            ctx.append(_build_window_info(hwnd, wnd_title))
+            ctx.append(build_window_info(hwnd, wnd_title))
             return False
         return True
 
@@ -106,13 +106,13 @@ def focus_window(title: str) -> str:
             win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
             time.sleep(0.3)
 
-        _force_foreground(hwnd)
+        force_foreground(hwnd)
         return f"Window '{w['title']}' is now focused"
     except Exception as e:
         return f"Failed to focus window '{w['title']}': {e}"
 
 
-def _force_foreground(hwnd: int) -> None:
+def force_foreground(hwnd: int) -> None:
     """Force a window to the foreground, bypassing Windows restrictions."""
     foreground_hwnd: int = win32gui.GetForegroundWindow()
     current_thread_id: int = ctypes.windll.kernel32.GetCurrentThreadId()

@@ -119,6 +119,35 @@ Once the MCP server is connected, you can ask Claude Code things like:
 - "Move the window to the top-left corner"
 - "What monitors do I have?"
 
+## Testing
+
+The project has 112 tests covering all modules. Tests use mocks for Win32 APIs so they run on any platform.
+
+### Running tests
+
+```bash
+uv run pytest
+```
+
+### Test structure
+
+```text
+tests/
+  conftest.py              # Shared fixtures and Win32 stubs
+  test_types.py            # TypedDict definitions validation
+  test_screenshot.py       # Screen/region/window capture (mss, Win32 DC)
+  test_window_manager.py   # Window listing, find, focus, resize, move, min/max/restore
+  test_process_manager.py  # Application launch and window polling
+  test_server.py           # MCP tool registration and integration
+```
+
+### Adding tests
+
+1. Put new tests in the matching `test_<module>.py` file
+2. Use the shared fixtures from `conftest.py` (`sample_window_info`, `mcp_server`, `fake_png_bytes`)
+3. Mock Win32 APIs with `@patch("winsight_mcp.<module>.win32gui")` — never call real Win32 functions in tests
+4. For server integration tests, use the `_call` helper to invoke tools and `_text` to extract string results
+
 ## License
 
 MIT

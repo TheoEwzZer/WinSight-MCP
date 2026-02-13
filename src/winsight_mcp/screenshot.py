@@ -99,7 +99,9 @@ def capture_window_hwnd(hwnd: int) -> bytes:
         )
 
         # Convert to PIL Image
-        bmp_info: BitmapInfo = cast(BitmapInfo, bitmap.GetInfo())  # pyright: ignore[reportUnknownMemberType]
+        bmp_info: BitmapInfo = cast(
+            BitmapInfo, bitmap.GetInfo()  # pyright: ignore[reportUnknownMemberType]
+        )
         bmp_bits: bytes = bitmap.GetBitmapBits(True)
         pil_img: PILImage.Image = PILImage.frombuffer(
             "RGB",
