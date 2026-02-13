@@ -4,6 +4,7 @@
     ".": {
       "release-type": "python",
       "package-name": "winsight-mcp",
+      "bump-minor-pre-major": true,
       "extra-files": [
         {
           "type": "json",
