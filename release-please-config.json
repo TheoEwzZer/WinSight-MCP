@@ -5,6 +5,19 @@
       "release-type": "python",
       "package-name": "winsight-mcp",
       "bump-minor-pre-major": true,
+      "changelog-sections": [
+        { "type": "feat", "section": "Features" },
+        { "type": "fix", "section": "Bug Fixes" },
+        { "type": "perf", "section": "Performance" },
+        { "type": "refactor", "section": "Refactoring" },
+        { "type": "docs", "section": "Documentation" },
+        { "type": "chore", "section": "Miscellaneous" },
+        { "type": "ci", "section": "CI" },
+        { "type": "test", "section": "Tests" },
+        { "type": "build", "section": "Build" },
+        { "type": "style", "section": "Style" },
+        { "type": "revert", "section": "Reverts" }
+      ],
       "extra-files": [
         {
           "type": "json",
