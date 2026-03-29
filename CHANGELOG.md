@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.2.2](https://github.com/TheoEwzZer/WinSight-MCP/compare/winsight-mcp-v0.2.1...winsight-mcp-v0.2.2) (2026-03-29)
+
+
+### Miscellaneous
+
+* **deps:** bump cryptography from 46.0.5 to 46.0.6 ([44dd4e9](https://github.com/TheoEwzZer/WinSight-MCP/commit/44dd4e9a20d7db69c43c38ea77ec019b9baca476))
+* **deps:** bump cryptography from 46.0.5 to 46.0.6 ([30f7130](https://github.com/TheoEwzZer/WinSight-MCP/commit/30f713045b7baaccc70dc9d79ad54189dd8b5c61))
+* **deps:** bump pyjwt from 2.11.0 to 2.12.0 ([cc05e97](https://github.com/TheoEwzZer/WinSight-MCP/commit/cc05e979a2c1a7371930e95b37b04ac020c5954c))
+* **deps:** bump pyjwt from 2.11.0 to 2.12.0 ([447743a](https://github.com/TheoEwzZer/WinSight-MCP/commit/447743ac48de5159677c3c33a8243a6d94a3daa3))
+
 ## [0.2.1](https://github.com/TheoEwzZer/WinSight-MCP/compare/winsight-mcp-v0.2.0...winsight-mcp-v0.2.1) (2026-02-13)
 
 
