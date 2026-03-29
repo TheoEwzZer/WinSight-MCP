@@ -1,6 +1,6 @@
 [project]
 name = "winsight-mcp"
-version = "0.2.1"
+version = "0.2.2"
 description = "Windows Screen Capture MCP Server — give Claude Code eyes on your Windows desktop"
 requires-python = ">=3.10"
 readme = "README.md"
